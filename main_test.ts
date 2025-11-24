@@ -24,7 +24,9 @@ function mockRecipeAgent(
 }
 
 Deno.test("Health route returns structured payload", async () => {
-  const res = await handleHealthCheck(new Request("http://localhost:8000/health"));
+  const res = await handleHealthCheck(
+    new Request("http://localhost:8000/health")
+  );
   assertEquals(res.status, 200);
   const body = await res.json();
   assertEquals(body.status, "healthy");

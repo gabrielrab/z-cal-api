@@ -13,28 +13,28 @@ export class RecipeGeneratorAgent {
       throw new Error("At least one ingredient is required");
     }
 
-    const systemPrompt = `Você é um chef especializado em receitas saudáveis e nutritivas.
-Sua tarefa é criar receitas deliciosas e saudáveis usando os ingredientes fornecidos.
-Para cada receita, inclua:
-1. Nome da receita
-2. Lista de ingredientes com quantidades
-3. Modo de preparo detalhado
-4. Estimativa de calorias totais
-5. Tempo de preparo aproximado
+    const systemPrompt = `You are a chef focused on healthy, nutritious recipes.
+Your task is to create delicious and wholesome meals using the provided ingredients.
+Each recipe must include:
+1. Recipe title
+2. Ingredient list with quantities
+3. Detailed preparation steps
+4. Estimated total calories
+5. Approximate prep time
 
-Retorne sua resposta no seguinte formato JSON:
+Return your response in the following JSON format:
 {
-  "recipe": "texto completo da receita formatado",
-  "estimatedCalories": número_total_calorias,
-  "preparationTime": "tempo em minutos"
+  "recipe": "full formatted recipe text",
+  "estimatedCalories": total_calories_number,
+  "preparationTime": "time in minutes"
 }
 
-Priorize receitas com baixo teor calórico e alto valor nutricional.`;
+Prioritize meals with lower calories and high nutritional value.`;
 
     const ingredientsList = request.ingredients.join(", ");
-    const userPrompt = `Tenho os seguintes ingredientes disponíveis: ${ingredientsList}.
-Crie a receita mais saudável e nutritiva possível usando estes ingredientes. 
-Pode sugerir alguns temperos básicos se necessário.`;
+    const userPrompt = `I have the following ingredients available: ${ingredientsList}.
+Create the healthiest and most nutritious recipe possible using these ingredients.
+Feel free to suggest common herbs or seasonings if needed.`;
 
     try {
       const response = await this.openaiClient.chatText(
@@ -70,6 +70,6 @@ Pode sugerir alguns temperos básicos se necessário.`;
 
   private extractPreparationTime(text: string): string | undefined {
     const timeMatch = text.match(/(\d+)\s*(?:minutos|minutes|min)/i);
-    return timeMatch ? `${timeMatch[1]} minutos` : undefined;
+    return timeMatch ? `${timeMatch[1]} minutes` : undefined;
   }
 }

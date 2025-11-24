@@ -25,21 +25,21 @@ export class FoodIdentifierAgent {
 
     const cleanImage = ImageProcessor.cleanBase64String(request.image);
 
-    const systemPrompt = `Você é um especialista em nutrição e identificação de alimentos. 
-Sua tarefa é analisar imagens de alimentos e fornecer:
-1. O nome do alimento em português
-2. Uma estimativa precisa de calorias (considerando porção média visível)
-3. Uma breve descrição nutricional
+    const systemPrompt = `You are a nutrition expert specialized in food recognition.
+Your job is to analyze food images and provide:
+1. The name of the food (in English)
+2. An accurate calorie estimate (based on the visible portion)
+3. A brief nutritional description
 
-Retorne sua resposta no seguinte formato JSON:
+Return your answer using the following JSON structure:
 {
-  "food": "nome do alimento",
-  "calories": número_de_calorias,
-  "confidence": porcentagem_de_confiança (0-100),
-  "description": "breve descrição nutricional"
+  "food": "food name",
+  "calories": calorie_amount,
+  "confidence": confidence_percentage (0-100),
+  "description": "brief nutritional description"
 }`;
 
-    const userPrompt = `Por favor, identifique o alimento nesta imagem e forneça informações nutricionais detalhadas, especialmente as calorias estimadas.`;
+    const userPrompt = `Please identify the food in this image and provide detailed nutritional information, especially the estimated calories.`;
 
     try {
       const response = await this.openaiClient.chatWithVision(
@@ -71,7 +71,7 @@ Retorne sua resposta no seguinte formato JSON:
     const calories = caloriesMatch ? parseInt(caloriesMatch[1]) : 0;
 
     return {
-      food: "Alimento identificado",
+      food: "Identified food",
       calories,
       confidence: 70,
       description: text.substring(0, 200),

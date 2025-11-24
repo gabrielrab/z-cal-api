@@ -1,5 +1,5 @@
 import { RecipeGeneratorAgent } from "../agents/recipe-generator.ts";
-import type { RecipeRequest } from "../types/index.ts";
+import type { RecipeChatRequest, RecipeChatResponse } from "../types/index.ts";
 
 export async function handleRecipeGeneration(
   req: Request,
@@ -13,7 +13,7 @@ export async function handleRecipeGeneration(
       });
     }
 
-    let body: RecipeRequest;
+    let body: RecipeChatRequest;
     try {
       body = await req.json();
     } catch {
@@ -23,22 +23,20 @@ export async function handleRecipeGeneration(
       });
     }
 
-    if (
-      !body.ingredients ||
-      !Array.isArray(body.ingredients) ||
-      body.ingredients.length === 0
-    ) {
+    if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
       return new Response(
         JSON.stringify({
-          error: "Ingredients field is required and must be a non-empty array",
+          error: "Messages field is required and must be a non-empty array of chat messages",
         }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    const result = await recipeAgent.generateHealthyRecipe(body);
+    const result = await recipeAgent.generateChatResponse(body.messages);
 
-    return new Response(JSON.stringify(result), {
+    const response: RecipeChatResponse = { response: result };
+
+    return new Response(JSON.stringify(response), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -47,7 +45,7 @@ export async function handleRecipeGeneration(
 
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";
-    const statusCode = errorMessage.includes("required") ? 400 : 500;
+    const statusCode = 400;
 
     return new Response(JSON.stringify({ error: errorMessage }), {
       status: statusCode,

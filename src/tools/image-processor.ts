@@ -12,7 +12,13 @@ export class ImageProcessor {
 
   static estimateImageSize(base64String: string): number {
     const cleanString = this.cleanBase64String(base64String);
-    return Math.ceil((cleanString.length * 3) / 4);
+    const paddingChars = cleanString.endsWith("==")
+      ? 2
+      : cleanString.endsWith("=")
+        ? 1
+        : 0;
+    const size = Math.ceil((cleanString.length * 3) / 4) - paddingChars;
+    return Math.max(size, 0);
   }
 
   static validateImageSize(

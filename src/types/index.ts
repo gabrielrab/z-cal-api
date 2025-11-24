@@ -2,11 +2,18 @@ export interface FoodIdentificationRequest {
   image: string;
 }
 
+export interface FoodMacros {
+  protein: string;
+  carbs: string;
+  fat: string;
+}
+
 export interface FoodIdentificationResponse {
-  food: string;
+  name: string;
   calories: number;
-  confidence: number;
-  description?: string;
+  macros: FoodMacros;
+  healthScore: number;
+  insights: string;
 }
 
 export interface ChatMessage {

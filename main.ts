@@ -4,26 +4,21 @@ import { FoodIdentifierAgent } from "./src/agents/food-identifier.ts";
 import { RecipeGeneratorAgent } from "./src/agents/recipe-generator.ts";
 import { Router } from "./src/router.ts";
 
-// Carrega variáveis de ambiente do arquivo .env
 await load({ export: true });
 
-// Configuração
 const PORT = parseInt(Deno.env.get("PORT") || "8000");
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") || "";
 
-// Validação de configuração
 if (!OPENAI_API_KEY) {
   console.error("❌ OPENAI_API_KEY environment variable is required");
   Deno.exit(1);
 }
 
-// Inicializa clientes e agentes
 const openaiClient = new ZypherClient(OPENAI_API_KEY);
 const foodAgent = new FoodIdentifierAgent(openaiClient);
 const recipeAgent = new RecipeGeneratorAgent(openaiClient);
 const router = new Router(foodAgent, recipeAgent);
 
-// Handler do servidor
 const handler = async (req: Request): Promise<Response> => {
   // CORS headers
   if (req.method === "OPTIONS") {
@@ -40,7 +35,6 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const response = await router.route(req);
 
-    // Adiciona CORS headers
     const headers = new Headers(response.headers);
     headers.set("Access-Control-Allow-Origin", "*");
 
@@ -60,7 +54,6 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-// Inicia servidor
 console.log(`🚀 Z-Cal API running on http://localhost:${PORT}`);
 console.log(`📊 Available endpoints:`);
 console.log(`   GET  /health - Health check`);

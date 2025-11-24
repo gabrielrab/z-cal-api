@@ -9,24 +9,55 @@ export interface FoodIdentificationResponse {
   description?: string;
 }
 
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface RecipeChatRequest {
+  messages: ChatMessage[];
+}
+
+export interface RecipeChatResponse {
+  response: string;
+}
+
 export interface RecipeRequest {
-  ingredients: string[];
+  messages: ChatMessage[];
 }
 
 export interface RecipeResponse {
-  recipe: string;
-  estimatedCalories: number;
-  preparationTime?: string;
+  response: string;
 }
+
+export type ZypherTextBlock = {
+  type: "text";
+  text: string;
+};
+
+export type ZypherImageBlock = {
+  type: "image";
+  source: {
+    type: "base64";
+    mediaType: string;
+    data: string;
+  };
+};
+
+export type ZypherContentBlock = ZypherTextBlock | ZypherImageBlock;
+
+export interface ZypherChatMessage {
+  role: "user" | "assistant";
+  content: string | ZypherContentBlock[];
+}
+
+export type ZypherMessage =
+  | { role: "system"; content: string | ZypherContentBlock[] }
+  | ZypherChatMessage;
 
 export interface ZypherRequest {
   model: string;
-  messages: Array<{
-    role: "system" | "user" | "assistant";
-    content:
-      | string
-      | Array<{ type: string; text?: string; image_url?: { url: string } }>;
-  }>;
+  messages: ZypherMessage[];
   max_tokens?: number;
   temperature?: number;
 }

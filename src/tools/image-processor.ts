@@ -15,8 +15,8 @@ export class ImageProcessor {
     const paddingChars = cleanString.endsWith("==")
       ? 2
       : cleanString.endsWith("=")
-        ? 1
-        : 0;
+      ? 1
+      : 0;
     const size = Math.ceil((cleanString.length * 3) / 4) - paddingChars;
     return Math.max(size, 0);
   }

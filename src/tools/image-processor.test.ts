@@ -9,10 +9,7 @@ Deno.test("ImageProcessor - accepts valid bare base64 image data", () => {
 Deno.test("ImageProcessor - accepts base64 data URL", () => {
   const validBase64WithPrefix =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ==";
-  assertEquals(
-    ImageProcessor.validateBase64Image(validBase64WithPrefix),
-    true
-  );
+  assertEquals(ImageProcessor.validateBase64Image(validBase64WithPrefix), true);
 });
 
 Deno.test("ImageProcessor - rejects empty or malformed strings", () => {
@@ -22,12 +19,15 @@ Deno.test("ImageProcessor - rejects empty or malformed strings", () => {
   assertEquals(ImageProcessor.validateBase64Image(emptyBase64), false);
 });
 
-Deno.test("ImageProcessor - clean removes prefix but keeps untouched data", () => {
-  const withPrefix = "data:image/jpeg;base64,ABC123==";
-  const alreadyClean = "ZXhhbXBsZQ==";
-  assertEquals(ImageProcessor.cleanBase64String(withPrefix), "ABC123==");
-  assertEquals(ImageProcessor.cleanBase64String(alreadyClean), alreadyClean);
-});
+Deno.test(
+  "ImageProcessor - clean removes prefix but keeps untouched data",
+  () => {
+    const withPrefix = "data:image/jpeg;base64,ABC123==";
+    const alreadyClean = "ZXhhbXBsZQ==";
+    assertEquals(ImageProcessor.cleanBase64String(withPrefix), "ABC123==");
+    assertEquals(ImageProcessor.cleanBase64String(alreadyClean), alreadyClean);
+  }
+);
 
 Deno.test("ImageProcessor - estimates byte size using RFC4648 math", () => {
   const base64 = "QUJD"; // "ABC"
